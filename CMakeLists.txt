@@ -72,6 +72,23 @@ endif()
 
 message("Compiling for ${BOARD} board type")
 
+set(KNOW_CONSOLE QPORT VIRTIO)
+set(CONSOLE "VIRTIO" CACHE STRING "CONSOLE, must be in ${KNOW_CONSOLE}")
+
+if(NOT DEFINED CONSOLE OR NOT CONSOLE IN_LIST KNOW_CONSOLE)
+    message(FATAL_ERROR "Please set CONSOLE to a value in ${KNOW_CONSOLE}")
+endif()
+
+if(CONSOLE STREQUAL "QPORT")
+add_definitions(-DCONFIG_QPORT_CONSOLE)
+elseif(CONSOLE STREQUAL "VIRTIO")
+add_definitions(-DCONFIG_VIRTIO_CONSOLE)
+else()
+    message(FATAL_ERROR "Unknown Scheduler ${CONSOLE}")
+endif()
+
+message("Using ${CONFIG_SCHED} Scheduler")
+
 set(CONFIG_STACK_SIZE "0x1000" CACHE STRING "XHyp stack size")
 add_definitions(-DCONFIG_STACK_SIZE=${CONFIG_STACK_SIZE})
 
