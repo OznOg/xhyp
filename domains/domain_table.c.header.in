@@ -27,3 +27,9 @@
 #include <sys/io.h>
 
 struct domain domain_table[] = {
+        {
+	.name = "Xhyp",
+	.size = XHYP_MEM_SIZE,
+	.type = DTYPE_HYP,
+	.prio = 31,
+	},

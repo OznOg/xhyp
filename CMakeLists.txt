@@ -92,5 +92,16 @@ target_compile_definitions(lib PRIVATE
 
 target_include_directories(lib PRIVATE include/)
 
-
+add_custom_target(xhyp ALL
+                  COMMENT "Linking xhyp"
+                  DEPENDS common kernel start lib domain_table mlib all_domains
+                  COMMAND ${CMAKE_LINKER} -Bstatic -T ${CMAKE_BINARY_DIR}/domains/xhyp.ld
+                          arch/${ARCH}/${BOARD}/libstart.a
+                          libkernel.a arch/${ARCH}/common/libcommon.a libkernel.a
+                          arch/${ARCH}/common/libcommon.a
+                          arch/${ARCH}/lib/libmlib.a
+                          liblib.a
+                          ${DOMAINS}
+                          domains/libdomain_table.a
+                          -o xhyp)
 

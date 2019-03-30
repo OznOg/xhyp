@@ -10,15 +10,17 @@ foreach(domain ${DOMAINS_DIR})
     list(GET CONFIG_DOMAINS ${DOM_ID} config)
     math(EXPR DOM_ID "${DOM_ID}+1")
     get_filename_component(DOMAIN_NAME ${domain} NAME)
-    add_custom_target(
-            ${DOMAIN_NAME} ALL
+    add_custom_command(OUTPUT ${DOMAIN_NAME}.ho
             COMMAND ${CMAKE_COMMAND} -E make_directory ${DOMAIN_NAME}
             COMMAND ${CMAKE_OBJCOPY} ${domain}/os -O binary ${DOMAIN_NAME}/domain.bin
             COMMAND ${CMAKE_OBJCOPY} --input-target binary --output-target elf32-littlearm
                                      --binary-architecture arm --rename-section '.data=.dm${DOM_ID}'
-                                     ${DOMAIN_NAME}/domain.bin ${DOMAIN_NAME}/domain.ho
+                                     ${DOMAIN_NAME}/domain.bin ${DOMAIN_NAME}.ho
             COMMENT "Building ${domain}")
-    list(APPEND DOMAINS ${CMAKE_CURRENT_BINARY_DIR}/${DOMAIN_NAME}/domain.ho)
+    add_custom_target(${DOMAIN_NAME} DEPENDS ${DOMAIN_NAME}.ho)
+
+    list(APPEND DOMAINS_DEPS ${DOMAIN_NAME})
+    list(APPEND DOMAINS ${CMAKE_CURRENT_BINARY_DIR}/${DOMAIN_NAME}.ho)
 
     # original file uses \t and spaces to indent fields, need to remove all this
     # before processing inputs
@@ -50,12 +52,17 @@ foreach(domain ${DOMAINS_DIR})
     configure_file(domain_table.c.entry.in domain_table.c.entry.${DOM_ID})
     list(APPEND generated_entries ${CMAKE_CURRENT_BINARY_DIR}/domain_table.c.entry.${DOM_ID})
 
-    #loader script stuff
+    #linker script stuff
     string(APPEND PHDRS "  dom${DOM_ID} PT_LOAD;\n")
     string(APPEND SECTIONS "      .dm${DOM_ID} : { } > ram_dom${DOM_ID} : dom${DOM_ID}\n")
     string(APPEND MEMORY_LAYOUT "  ram_ctl${DOM_ID} : org = ${base}, l = ${OFST}\n")
     string(APPEND MEMORY_LAYOUT "  ram_dom${DOM_ID} : org = ${base} + ${OFST}, l = ${size} - ${OFST}\n")
 endforeach()
+
+# need to forward file names to paent scope. This is quite ugly, but I did not find any better solution
+set(DOMAINS ${DOMAINS} PARENT_SCOPE)
+add_custom_target(all_domains
+        DEPENDS ${DOMAINS_DEPS})
 
 configure_file(xhyp.ld.in xhyp.ld)
 
@@ -69,6 +76,7 @@ file(READ domain_table.c.footer.in footer)
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/domain_table.c "${footer}")
 
 add_library(domain_table STATIC ${CMAKE_CURRENT_BINARY_DIR}/domain_table.c)
+add_dependencies(domain_table all_domains)
 target_compile_definitions(domain_table PRIVATE 
         __KERNEL__
         TEXT_BASE=0x00200000
