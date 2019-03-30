@@ -64,7 +64,7 @@ add_library(kernel STATIC
             kernel/scheduler.c
             kernel/tag.c
             kernel/timer.c)
-    target_compile_definitions(kernel PRIVATE
+target_compile_definitions(kernel PRIVATE
             __KERNEL__
             TEXT_BASE=0x00200000
             CONFIG_ARM __ARM__
