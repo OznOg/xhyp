@@ -17,15 +17,31 @@
 # 
 cmake_minimum_required(VERSION 3.11)
 
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/toolchain.cmake)
+set(KNOW_ARCH arm leon mips sh4 x86)
 
-enable_language(ASM)
+if(NOT DEFINED ARCH OR NOT ARCH IN_LIST KNOW_ARCH)
+    message(FATAL_ERROR "Please set ARCH to a value in ${KNOW_ARCH}")
+endif()
 
-set(project xhyp)
-
+message("Compiling for arch=${ARCH}")
+if (ARCH STREQUAL "arm")
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/arm_toolchain.cmake)
 add_compile_options(-fno-common -ffixed-r8 -msoft-float -fno-builtin
             -ffreestanding -nostdinc -pipe -marm  -mabi=aapcs-linux -mno-thumb-interwork
             -march=armv5te -Wall -Wstrict-prototypes -fno-stack-protector -Werror)
+else()
+    message(FATAL_ERROR "Arch not supported (yet)")
+endif()
+
+project(xhyp)
+
+enable_language(ASM)
+
+set(KNOW_SCHEDS POSIX ARINC)
+
+if(NOT DEFINED CONFIG_SCHED OR NOT CONFIG_SCHED IN_LIST KNOW_SCHEDS)
+    message(FATAL_ERROR "Please set CONFIG_SCHED to a value in ${KNOW_SCHEDS}")
+endif()
 
 if(CONFIG_SCHED STREQUAL "POSIX")
     set(SCHED kernel/sched_posix.c)
@@ -34,14 +50,6 @@ elseif(CONFIG_SCHED STREQUAL "ARINC")
 else()
     message(FATAL_ERROR "Unknown Scheduler ${CONFIG_SCHED}")
 endif()
-
-set(KNOW_ARCH arm leon mips sh4 x86)
-
-if(NOT DEFINED ARCH OR NOT ARCH IN_LIST KNOW_ARCH)
-    message(FATAL_ERROR "Please set ARCH to a value in ${KNOW_ARCH}")
-endif()
-
-message("Compiling for arch=${ARCH}")
 
 set(KNOW_BOARD beagle realview versatile)
 if(NOT DEFINED BOARD OR NOT BOARD IN_LIST KNOW_BOARD)
