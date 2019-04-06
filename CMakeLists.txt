@@ -115,5 +115,5 @@ target_link_libraries(xhyp PRIVATE kernel common kernel common mlib lib ${DOMAIN
 
 set_target_properties(xhyp PROPERTIES LINK_FLAGS "-nostdlib -Bstatic -T ${CMAKE_BINARY_DIR}/domains/xhyp.ld")
 
-set_target_properties(xhyp PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(xhyp PROPERTIES POSITION_INDEPENDENT_CODE OFF)
 

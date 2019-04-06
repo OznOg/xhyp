@@ -19,7 +19,7 @@ set_target_properties(console PROPERTIES LINK_FLAGS "-nostdlib -Bstatic -T ${CMA
 target_include_directories(console PRIVATE include/)
 
 set_target_properties(console PROPERTIES PREFIX "")
-set_target_properties(console PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(console PROPERTIES POSITION_INDEPENDENT_CODE OFF)
 
 set_target_properties(console PROPERTIES SUFFIX ".dom")
 
