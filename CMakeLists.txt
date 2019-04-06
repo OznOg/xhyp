@@ -81,7 +81,6 @@ target_include_directories(kernel PRIVATE include/)
 
 add_subdirectory(arch/${ARCH}/common/)
 add_subdirectory(arch/${ARCH}/lib/)
-add_subdirectory(arch/${ARCH}/${BOARD}/)
 add_subdirectory(domains/)
 add_subdirectory(drivers/console/)
 
@@ -101,16 +100,20 @@ target_compile_definitions(lib PRIVATE
 
 target_include_directories(lib PRIVATE include/)
 
-add_custom_target(xhyp ALL
-                  COMMENT "Linking xhyp"
-                  DEPENDS common kernel start lib domain_table mlib all_domains
-                  COMMAND ${CMAKE_LINKER} -Bstatic -T ${CMAKE_BINARY_DIR}/domains/xhyp.ld
-                          arch/${ARCH}/${BOARD}/libstart.a
-                          libkernel.a arch/${ARCH}/common/libcommon.a libkernel.a
-                          arch/${ARCH}/common/libcommon.a
-                          arch/${ARCH}/lib/libmlib.a
-                          liblib.a
-                          ${DOMAINS}
-                          domains/libdomain_table.a
-                          -o xhyp)
+
+add_executable(xhyp
+        arch/${ARCH}/${BOARD}/start.S)
+target_include_directories(xhyp PRIVATE include/)
+target_compile_definitions(xhyp PRIVATE
+            __KERNEL__
+            __ASSEMBLY__
+            TEXT_BASE=0x00200000
+            CONFIG_ARM __ARM__
+            TEXT_BASE=0x00200000)
+
+target_link_libraries(xhyp PRIVATE kernel common kernel common mlib lib ${DOMAINS} domain_table)
+
+set_target_properties(xhyp PROPERTIES LINK_FLAGS "-nostdlib -Bstatic -T ${CMAKE_BINARY_DIR}/domains/xhyp.ld")
+
+set_target_properties(xhyp PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
