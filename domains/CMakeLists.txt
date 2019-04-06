@@ -6,27 +6,26 @@ file(GLOB DOMAINS_DIR domain0?)
 
 set(OFST "0x00100000")
 set(DOM_ID "0")
-foreach(domain ${DOMAINS_DIR})
-    list(GET CONFIG_DOMAINS ${DOM_ID} config)
+foreach(config ${CONFIG_DOMAINS})
     math(EXPR DOM_ID "${DOM_ID}+1")
     # original file uses \t and spaces to indent fields, need to remove all this
     # before processing inputs
     string(REGEX REPLACE "[ \t]+" ";" config ${config})
     list(GET config 9 path)
-    get_filename_component(DOMAIN_NAME ${domain} NAME)
+    list(GET config 0 name)
+    set(DOMAIN_NAME "domain${DOM_ID}")
     add_custom_command(OUTPUT ${DOMAIN_NAME}.ho
-            COMMAND ${CMAKE_COMMAND} -E make_directory ${DOMAIN_NAME}
-            COMMAND ${CMAKE_OBJCOPY} ${CMAKE_SOURCE_DIR}/${path} -O binary ${DOMAIN_NAME}/domain.bin
+            DEPENDS ${name}
+            COMMAND ${CMAKE_OBJCOPY} ${CMAKE_BINARY_DIR}/${path} -O binary ${DOMAIN_NAME}.bin
             COMMAND ${CMAKE_OBJCOPY} --input-target binary --output-target elf32-littlearm
                                      --binary-architecture arm --rename-section '.data=.dm${DOM_ID}'
-                                     ${DOMAIN_NAME}/domain.bin ${DOMAIN_NAME}.ho
+                                     ${DOMAIN_NAME}.bin ${DOMAIN_NAME}.ho
             COMMENT "Building ${domain}")
     add_custom_target(${DOMAIN_NAME} DEPENDS ${DOMAIN_NAME}.ho)
 
     list(APPEND DOMAINS_DEPS ${DOMAIN_NAME})
     list(APPEND DOMAINS ${CMAKE_CURRENT_BINARY_DIR}/${DOMAIN_NAME}.ho)
 
-    list(GET config 0 name)
     list(GET config 1 base)
     list(GET config 2 virt)
     list(GET config 3 size)
