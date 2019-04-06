@@ -24,11 +24,11 @@ SECTIONS
         . = ALIGN(4);
         .vect :
         {
-                *start.S.obj   (.text)
+                *start.S.o   (.text)
         } > vecteurs : vect
         .text :
         {
-                *main.c.obj     (.text)
+                *main.c.o     (.text)
                 *(.text)
                 *(.glue_7t)
                 *(.glue_7)

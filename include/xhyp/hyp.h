@@ -83,6 +83,7 @@
 #define _HYP_CALLS			57
 
 #ifndef __ASSEMBLY__
+#ifndef __ASSEMBLER__
 
 typedef int (*call_entry_t)(void);
 typedef unsigned long (*v_handler_t)(unsigned long);
@@ -159,4 +160,5 @@ extern int hypercall_count[_HYP_CALLS];
 extern void panic(struct context *, char *);
 extern void hyp_mode_set(unsigned long mode);
 
+#endif /* __ASSEMBLER__ */
 #endif

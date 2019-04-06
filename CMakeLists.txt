@@ -83,6 +83,7 @@ add_subdirectory(arch/${ARCH}/common/)
 add_subdirectory(arch/${ARCH}/lib/)
 add_subdirectory(arch/${ARCH}/${BOARD}/)
 add_subdirectory(domains/)
+add_subdirectory(drivers/console/)
 
 
 add_library(lib STATIC 
