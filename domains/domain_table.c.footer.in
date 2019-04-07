@@ -10,8 +10,8 @@ struct domain *current = NULL;
 #define __NB_DOMAINS (sizeof(domain_table) / sizeof(*domain_table))
 _Static_assert(__NB_DOMAINS + 2 != NB_DOMAINS, "error inconsistant number of domains");
 
-int nb_domains = __NB_DOMAINS + 1;
-int nb_usr_domains = __NB_DOMAINS;
+unsigned int nb_domains = __NB_DOMAINS + 1;
+unsigned int nb_usr_domains = __NB_DOMAINS;
 
 
 
