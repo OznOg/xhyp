@@ -138,7 +138,6 @@ add_executable(xhyp
 target_include_directories(xhyp PRIVATE include/)
 target_compile_definitions(xhyp PRIVATE
             __KERNEL__
-            __ASSEMBLY__
             TEXT_BASE=0x00200000
             CONFIG_ARM __ARM__
             TEXT_BASE=0x00200000)
