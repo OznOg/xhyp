@@ -64,7 +64,28 @@ if(NOT DEFINED BOARD OR NOT BOARD IN_LIST KNOW_BOARD)
     message(FATAL_ERROR "Please set BOARD to a value in ${KNOW_BOARD}")
 endif()
 
+if (BOARD STREQUAL "versatile")
+    add_definitions(-DCONFIG_BOARD_VERSATILE)
+elseif (BOARD STREQUAL "realview")
+    add_definitions(-DCONFIG_BOARD_REALVIEW)
+endif()
+
 message("Compiling for ${BOARD} board type")
+
+set(CONFIG_STACK_SIZE "0x1000" CACHE STRING "XHyp stack size")
+add_definitions(-DCONFIG_STACK_SIZE=${CONFIG_STACK_SIZE})
+
+set(CONFIG_MEMORY_SIZE "0x08000000" CACHE STRING "Platform memory size")
+add_definitions(-DCONFIG_MEMORY_SIZE=${CONFIG_MEMORY_SIZE})
+
+set(CONFIG_PERIPH_BASE "0x10000000" CACHE STRING "Peripheral base address")
+add_definitions(-DCONFIG_PERIPH_BASE=${CONFIG_PERIPH_BASE})
+
+set(CONFIG_TIMER_PERIOD "10" CACHE STRING "Peripheral base address")
+add_definitions(-DCONFIG_TIMER_PERIOD=${CONFIG_TIMER_PERIOD})
+
+set(CONFIG_PERIPH_SIZE "0x02000000" CACHE STRING "Peripheral address size")
+add_definitions(-DCONFIG_PERIPH_SIZE=${CONFIG_PERIPH_SIZE})
 
 add_library(kernel STATIC
             kernel/copypage.c
