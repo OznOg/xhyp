@@ -103,7 +103,6 @@ add_library(kernel STATIC
             kernel/timer.c)
 target_compile_definitions(kernel PRIVATE
             __KERNEL__
-            TEXT_BASE=0x00200000
             CONFIG_ARM __ARM__
             TEXT_BASE=0x00200000)
 target_include_directories(kernel PRIVATE include/)
@@ -125,7 +124,6 @@ add_library(lib STATIC
         lib/_udivsi3.S)
 target_compile_definitions(lib PRIVATE 
         __KERNEL__
-        TEXT_BASE=0x00200000
         CONFIG_ARM __ARM__
         TEXT_BASE=0x00200000)
 
@@ -138,7 +136,6 @@ add_executable(xhyp
 target_include_directories(xhyp PRIVATE include/)
 target_compile_definitions(xhyp PRIVATE
             __KERNEL__
-            TEXT_BASE=0x00200000
             CONFIG_ARM __ARM__
             TEXT_BASE=0x00200000)
 
