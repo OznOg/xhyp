@@ -84,6 +84,8 @@ add_subdirectory(arch/${ARCH}/lib/)
 add_subdirectory(domains/)
 add_subdirectory(drivers/console/)
 add_subdirectory(os/)
+add_subdirectory(tests/irq/)
+add_subdirectory(tests/mmu/)
 
 
 add_library(lib STATIC 
