@@ -19,11 +19,14 @@ cmake_minimum_required(VERSION 3.11)
 
 set(KNOW_ARCH arm leon mips sh4 x86)
 
+set(ARCH "arm" CACHE STRING "Architecture to build for, must be in ${KNOW_ARCH}")
+
 if(NOT DEFINED ARCH OR NOT ARCH IN_LIST KNOW_ARCH)
     message(FATAL_ERROR "Please set ARCH to a value in ${KNOW_ARCH}")
 endif()
 
-message("Compiling for arch=${ARCH}")
+message("Compiling for ${ARCH}")
+
 if (ARCH STREQUAL "arm")
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/arm_toolchain.cmake)
 add_compile_options(-fno-common -ffixed-r8 -msoft-float -fno-builtin
@@ -38,6 +41,7 @@ project(xhyp)
 enable_language(ASM)
 
 set(KNOW_SCHEDS POSIX ARINC)
+set(CONFIG_SCHED "POSIX" CACHE STRING "SCHEDULER, must be in ${KNOW_SCHEDS}")
 
 if(NOT DEFINED CONFIG_SCHED OR NOT CONFIG_SCHED IN_LIST KNOW_SCHEDS)
     message(FATAL_ERROR "Please set CONFIG_SCHED to a value in ${KNOW_SCHEDS}")
@@ -51,12 +55,16 @@ else()
     message(FATAL_ERROR "Unknown Scheduler ${CONFIG_SCHED}")
 endif()
 
+message("Using ${CONFIG_SCHED} Scheduler")
+
 set(KNOW_BOARD beagle realview versatile)
+set(BOARD "versatile" CACHE STRING "board type to build for, must be in ${KNOW_SCHEDS}")
+
 if(NOT DEFINED BOARD OR NOT BOARD IN_LIST KNOW_BOARD)
     message(FATAL_ERROR "Please set BOARD to a value in ${KNOW_BOARD}")
 endif()
 
-message("Compiling for board=${BOARD}")
+message("Compiling for ${BOARD} board type")
 
 add_library(kernel STATIC
             kernel/copypage.c
