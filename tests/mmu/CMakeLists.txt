@@ -7,8 +7,6 @@ add_executable(MMU_TEST
 
 target_compile_definitions(MMU_TEST PRIVATE 
         __KERNEL__
-        TEXT_BASE=0x00200000
-        CONFIG_ARM __ARM__
         TEXT_BASE=0x00200000)
 
 

@@ -5,7 +5,6 @@ add_library(mlib STATIC
         _umodsi3.S)
 target_compile_definitions(mlib PRIVATE 
         __KERNEL__
-        CONFIG_ARM __ARM__
         TEXT_BASE=0x00200000)
 target_include_directories(mlib PRIVATE ${CMAKE_SOURCE_DIR}/include/)
 

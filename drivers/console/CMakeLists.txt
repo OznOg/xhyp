@@ -9,8 +9,6 @@ add_executable(Console
 
 target_compile_definitions(Console PRIVATE 
         __KERNEL__
-        TEXT_BASE=0x00200000
-        CONFIG_ARM __ARM__
         TEXT_BASE=0x00200000)
 
 

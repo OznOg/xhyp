@@ -78,8 +78,6 @@ add_library(domain_table STATIC ${CMAKE_CURRENT_BINARY_DIR}/domain_table.c)
 add_dependencies(domain_table all_domains)
 target_compile_definitions(domain_table PRIVATE 
         __KERNEL__
-        TEXT_BASE=0x00200000
-        CONFIG_ARM __ARM__
         TEXT_BASE=0x00200000)
 
 target_include_directories(domain_table PRIVATE ${CMAKE_SOURCE_DIR}/include/)

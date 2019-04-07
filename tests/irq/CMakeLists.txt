@@ -7,8 +7,6 @@ add_executable(IRQ_TEST
 
 target_compile_definitions(IRQ_TEST PRIVATE 
         __KERNEL__
-        TEXT_BASE=0x00200000
-        CONFIG_ARM __ARM__
         TEXT_BASE=0x00200000)
 
 

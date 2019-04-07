@@ -12,7 +12,6 @@ add_library(common STATIC
         bss.S)
 target_compile_definitions(common PRIVATE 
         __KERNEL__
-        CONFIG_ARM __ARM__
         TEXT_BASE=0x00200000)
 
 
